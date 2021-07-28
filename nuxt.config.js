@@ -38,7 +38,7 @@ export default {
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [],
+  modules: ['primevue/nuxt'],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
@@ -47,5 +47,13 @@ export default {
   server: {
     host: '0.0.0.0',
     port: 7000,
+  },
+
+  // PrimeVue
+  primevue: {
+    theme: 'md-dark-indigo',
+    ripple: true,
+    components: [],
+    directives: [],
   },
 }
