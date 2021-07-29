@@ -25,8 +25,8 @@ export default {
   @apply w-full h-screen text-white;
 
   display: grid;
+  grid-template-columns: auto 1fr;
   grid-template: {
-    columns: auto 1fr;
     rows: 1fr;
     areas: sidebar main;
   }
