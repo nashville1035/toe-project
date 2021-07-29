@@ -1,0 +1,52 @@
+<template>
+  <div class="main-container">
+    <ScrollPanel class="panel--side">
+      <Sidebar />
+    </ScrollPanel>
+
+    <ScrollPanel class="panel--main">
+      <nuxt class="con" />
+    </ScrollPanel>
+  </div>
+</template>
+
+<script>
+import Sidebar from '~/components/Sidebar.vue'
+
+export default {
+  components: {
+    Sidebar,
+  },
+}
+</script>
+
+<style lang="postcss" scoped>
+.main-container {
+  @apply w-full h-screen text-white;
+
+  display: grid;
+  grid-template: {
+    columns: auto 1fr;
+    rows: 1fr;
+    areas: sidebar main;
+  }
+}
+
+.con {
+  @apply w-4/5 mx-auto;
+}
+
+::v-deep {
+  .panel--side {
+    @apply bg-gray-900;
+
+    .p-scrollpanel-wrapper {
+      @apply w-80;
+    }
+  }
+
+  .panel--main {
+    @apply bg-black bg-opacity-95 pt-6;
+  }
+}
+</style>
