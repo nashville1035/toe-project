@@ -41,7 +41,9 @@ export default {
   modules: ['primevue/nuxt'],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    extractCSS: process.env.NODE_ENV === 'production',
+  },
 
   // Server config
   server: {
