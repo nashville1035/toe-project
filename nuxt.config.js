@@ -44,6 +44,14 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     extractCSS: process.env.NODE_ENV === 'production',
+
+    postcss: {
+      plugins: {
+        'postcss-nested': {},
+        'postcss-nested-props': {},
+        'postcss-import': {},
+      },
+    },
   },
 
   // Server config
@@ -54,9 +62,9 @@ export default {
 
   // PrimeVue
   primevue: {
-    theme: 'md-dark-indigo',
+    theme: 'md-dark-deeppurple',
     ripple: true,
-    components: [],
+    components: ['Button', 'Card', 'Menu', 'ScrollPanel', 'InputText'],
     directives: [],
   },
 
