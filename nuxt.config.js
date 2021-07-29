@@ -39,7 +39,7 @@ export default {
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ['primevue/nuxt'],
+  modules: ['primevue/nuxt', '@nuxtjs/firebase'],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
@@ -68,6 +68,25 @@ export default {
     display: 'swap',
     families: {
       Raleway: true,
+    },
+  },
+
+  // Firebase config
+  firebase: {
+    config: {
+      apiKey: 'AIzaSyAlwTTtYfBbA_TF5sG13EdWjFcp3MBMCdQ',
+      authDomain: 'thermal-ocean-eyes.firebaseapp.com',
+      projectId: 'thermal-ocean-eyes',
+      storageBucket: 'thermal-ocean-eyes.appspot.com',
+      messagingSenderId: '845986632897',
+      appId: '1:845986632897:web:49f652eb998c69c551f040',
+      measurementId: 'G-MDZQ11855N',
+    },
+    services: {
+      auth: true,
+      firestore: true,
+      analytics: true,
+      storage: true,
     },
   },
 }
