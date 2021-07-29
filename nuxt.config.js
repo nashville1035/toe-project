@@ -35,6 +35,7 @@ export default {
     '@nuxtjs/eslint-module',
     // https://go.nuxtjs.dev/tailwindcss
     '@nuxtjs/tailwindcss',
+    '@nuxtjs/google-fonts',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -57,5 +58,16 @@ export default {
     ripple: true,
     components: [],
     directives: [],
+  },
+
+  // Google Fonts
+  googleFonts: {
+    prefetch: true,
+    preconnect: true,
+    preload: true,
+    display: 'swap',
+    families: {
+      Raleway: true,
+    },
   },
 }
