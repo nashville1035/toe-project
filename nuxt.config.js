@@ -77,9 +77,10 @@ export default {
       'Menu',
       'ScrollPanel',
       'Skeleton',
+      'Toast',
     ],
     directives: [],
-    services: ['ConfirmationService'],
+    services: ['ConfirmationService', 'ToastService'],
   },
 
   // Google Fonts

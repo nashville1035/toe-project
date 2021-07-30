@@ -1,9 +1,12 @@
 export const state = () => ({
   locations: [],
+  temperatures: [],
 })
 
 export const mutations = {
   addLocations: (state, items) => (state.locations = items),
+
+  addTemperatures: (state, items) => (state.temperatures = items),
 }
 
 export const getters = {
@@ -20,6 +23,11 @@ export const getters = {
         return 0
       }
     }),
+
+  sortedTemperatures: (state) => (year) =>
+    state.temperatures
+      .filter((x) => x.year === year)
+      .sort((a, b) => a.month - b.month),
 }
 
 export const actions = {
@@ -27,6 +35,33 @@ export const actions = {
     await this.$fire.firestore.collection('temp-location').add({
       name,
     })
+  },
+
+  async addTemperatureAsync(_, { location, month, year, avg, max, min }) {
+    await this.$fire.firestore
+      .collection('temp-location')
+      .doc(location)
+      .collection('temps')
+      .add({
+        avg,
+        min,
+        max,
+        month,
+        year,
+      })
+  },
+
+  async deleteLocationAsync(_, id) {
+    await this.$fire.firestore.collection('temp-location').doc(id).delete()
+  },
+
+  async deleteTemperatureAsync(_, { locId, id }) {
+    await this.$fire.firestore
+      .collection('temp-location')
+      .doc(locId)
+      .collection('temps')
+      .doc(id)
+      .delete()
   },
 
   async loadLocationsAsync({ commit }) {
@@ -43,21 +78,20 @@ export const actions = {
     commit('addLocations', items)
   },
 
-  async deleteLocationAsync(_, id) {
-    await this.$fire.firestore.collection('temp-location').doc(id).delete()
-  },
-
-  async addTemperatureAsync(_, { location, month, year, avg, max, min }) {
-    await this.$fire.firestore
+  async loadTemperaturesAsync({ commit }, id) {
+    const snap = await this.$fire.firestore
       .collection('temp-location')
-      .doc(location)
+      .doc(id)
       .collection('temps')
-      .add({
-        avg,
-        min,
-        max,
-        month,
-        year,
-      })
+      .get()
+
+    if (snap.empty) {
+      return
+    }
+
+    const items = []
+    snap.forEach((doc) => items.push({ id: doc.id, ...doc.data() }))
+
+    commit('addTemperatures', items)
   },
 }
