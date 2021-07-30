@@ -19,6 +19,11 @@ export default {
               icon: 'pi pi-map',
               to: { name: 'temperature-manage-locations' },
             },
+            {
+              label: 'Manage',
+              icon: 'pi pi-plus',
+              to: { name: 'temperature-manage' },
+            },
           ],
         },
       ],
