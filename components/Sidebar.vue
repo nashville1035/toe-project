@@ -15,14 +15,14 @@ export default {
           label: 'Temperatures',
           items: [
             {
-              label: 'Manage Locations',
-              icon: 'pi pi-map',
-              to: { name: 'temperature-manage-locations' },
-            },
-            {
               label: 'Manage',
               icon: 'pi pi-plus',
               to: { name: 'temperature-manage' },
+            },
+            {
+              label: 'Locations',
+              icon: 'pi pi-map',
+              to: { name: 'temperature-locations' },
             },
           ],
         },
