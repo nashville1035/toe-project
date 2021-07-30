@@ -46,4 +46,18 @@ export const actions = {
   async deleteLocationAsync(_, id) {
     await this.$fire.firestore.collection('temp-location').doc(id).delete()
   },
+
+  async addTemperatureAsync(_, { location, month, year, avg, max, min }) {
+    await this.$fire.firestore
+      .collection('temp-location')
+      .doc(location)
+      .collection('temps')
+      .add({
+        avg,
+        min,
+        max,
+        month,
+        year,
+      })
+  },
 }

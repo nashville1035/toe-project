@@ -36,6 +36,7 @@ export default {
     // https://go.nuxtjs.dev/tailwindcss
     '@nuxtjs/tailwindcss',
     '@nuxtjs/google-fonts',
+    '@nuxtjs/date-fns',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -70,10 +71,12 @@ export default {
       'Column',
       'ConfirmDialog',
       'DataTable',
+      'Dropdown',
+      'InputNumber',
+      'InputText',
       'Menu',
       'ScrollPanel',
       'Skeleton',
-      'InputText',
     ],
     directives: [],
     services: ['ConfirmationService'],
