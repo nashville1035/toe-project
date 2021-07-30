@@ -64,8 +64,19 @@ export default {
   primevue: {
     theme: 'md-dark-deeppurple',
     ripple: true,
-    components: ['Button', 'Card', 'Menu', 'ScrollPanel', 'InputText'],
+    components: [
+      'Button',
+      'Card',
+      'Column',
+      'ConfirmDialog',
+      'DataTable',
+      'Menu',
+      'ScrollPanel',
+      'Skeleton',
+      'InputText',
+    ],
     directives: [],
+    services: ['ConfirmationService'],
   },
 
   // Google Fonts
