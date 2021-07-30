@@ -7,6 +7,9 @@
     <ScrollPanel class="panel--main">
       <nuxt class="con" />
     </ScrollPanel>
+
+    <Toast></Toast>
+    <ConfirmDialog></ConfirmDialog>
   </div>
 </template>
 

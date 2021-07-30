@@ -86,8 +86,6 @@
         </DataTable>
       </template>
     </Card>
-
-    <ConfirmDialog></ConfirmDialog>
   </div>
 </template>
 
@@ -127,6 +125,12 @@ export default {
           this.isSaving = true
           await this.addLocationAsync(this.name)
           await this.loadLocationsAsync()
+          this.$toast.add({
+            severity: 'success',
+            summary: 'Location Saved',
+            detail: `The location ${this.name} has been saved.`,
+            life: 3000,
+          })
           this.name = ''
           this.isSaving = false
         } catch (err) {}
@@ -139,6 +143,12 @@ export default {
         header: 'Confirm Deletion',
         accept: async () => {
           await this.deleteLocationAsync(item.id)
+          this.$toast.add({
+            severity: 'success',
+            summary: 'Location Deleted',
+            detail: `The location ${item.name} has been deleted.`,
+            life: 3000,
+          })
           await this.loadLocationsAsync()
         },
       })
