@@ -26,6 +26,15 @@ export default {
             },
           ],
         },
+        {
+          label: 'Fishing',
+          items: [
+            {
+              label: 'Vessels',
+              to: { name: 'fishing-vessels' },
+            },
+          ],
+        },
       ],
     }
   },
