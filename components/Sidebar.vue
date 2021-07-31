@@ -41,6 +41,16 @@ export default {
             },
           ],
         },
+        {
+          label: 'Reports',
+          items: [
+            {
+              label: 'View',
+              icon: 'mdi mdi-chart-box-outline',
+              to: { name: 'reports-view' },
+            },
+          ],
+        },
       ],
     }
   },
