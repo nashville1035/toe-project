@@ -68,6 +68,7 @@ export default {
     components: [
       'Button',
       'Card',
+      'Chart',
       'Column',
       'ConfirmDialog',
       'DataTable',
