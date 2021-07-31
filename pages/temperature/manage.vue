@@ -14,6 +14,8 @@
       <Dropdown
         v-model="selectedYear"
         class="w-32"
+        option-label="name"
+        option-value="value"
         placeholder="Year"
         :disabled="!selectedLocation.id"
         :options="years"
@@ -208,7 +210,13 @@ export default {
 
       return Array.from(
         { length: 1 + this.currentYear - startYear },
-        (x, i) => this.currentYear - i,
+        (x, i) => {
+          const value = this.currentYear - i
+          return {
+            value,
+            name: `${value}`,
+          }
+        },
       )
     },
 
