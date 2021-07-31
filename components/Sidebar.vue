@@ -16,12 +16,12 @@ export default {
           items: [
             {
               label: 'Manage',
-              icon: 'pi pi-plus',
+              icon: 'mdi mdi-coolant-temperature',
               to: { name: 'temperature-manage' },
             },
             {
               label: 'Locations',
-              icon: 'pi pi-map',
+              icon: 'mdi mdi-map-outline',
               to: { name: 'temperature-locations' },
             },
           ],
@@ -31,6 +31,7 @@ export default {
           items: [
             {
               label: 'Vessels',
+              icon: 'mdi mdi-ferry',
               to: { name: 'fishing-vessels' },
             },
           ],

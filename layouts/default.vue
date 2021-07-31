@@ -23,6 +23,10 @@ export default {
 }
 </script>
 
+<style lang="postcss">
+@import '@mdi/font/css/materialdesignicons';
+</style>
+
 <style lang="postcss" scoped>
 .main-container {
   @apply w-full h-screen text-white;

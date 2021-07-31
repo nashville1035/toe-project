@@ -75,7 +75,7 @@
                 <div class="flex space-x-3 items-center">
                   <Button
                     class="p-button-danger p-button-rounded p-button-text"
-                    icon="pi pi-trash"
+                    icon="mdi mdi-delete-outline"
                     type="button"
                     @click="showDeleteConfirmation(slotProps.data)"
                   ></Button>
