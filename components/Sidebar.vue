@@ -30,6 +30,11 @@ export default {
           label: 'Fishing',
           items: [
             {
+              label: 'Landings',
+              icon: 'mdi mdi-book-open-outline',
+              to: { name: 'fishing-manage' },
+            },
+            {
               label: 'Vessels',
               icon: 'mdi mdi-ferry',
               to: { name: 'fishing-vessels' },
