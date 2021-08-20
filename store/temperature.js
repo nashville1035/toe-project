@@ -52,6 +52,20 @@ export const actions = {
   },
 
   async deleteLocationAsync(_, id) {
+    const snap = await this.$fire.firestore
+      .collection('temp-location')
+      .doc(id)
+      .collection('temps')
+      .get()
+
+    snap.forEach(async (doc) => {
+      await this.$fire.firestore
+        .collection('temp-location')
+        .doc(id)
+        .collection('temps')
+        .doc(doc.id)
+        .delete()
+    })
     await this.$fire.firestore.collection('temp-location').doc(id).delete()
   },
 
