@@ -1,6 +1,28 @@
 <template>
   <div class="con flex flex-col space-y-16">
-    <Card>
+    <Toolbar>
+      <template #left>
+        <h1 class="text-3xl">Temperature Locations</h1>
+      </template>
+
+      <template #right>
+        <Button
+          v-if="state === 'default'"
+          label="New"
+          icon="mdi mdi-plus"
+          @click="state = 'add-location'"
+        />
+
+        <Button
+          v-else
+          class="!bg-secondary-dark !text-white"
+          icon="mdi mdi-close"
+          @click="closeAddLocation"
+        />
+      </template>
+    </Toolbar>
+
+    <Card v-if="state === 'add-location'">
       <template #title>
         <h1 class="text-2xl">Add Temperature Location</h1>
       </template>
@@ -10,15 +32,33 @@
           class="flex flex-col space-y-8 w-60"
           @submit.prevent="saveLocation"
         >
-          <span class="p-float-label">
-            <InputText
-              id="name"
-              v-model.trim="name"
-              class="p-inputtext-sm w-full"
-              type="text"
-            />
-            <label for="name">Name</label>
-          </span>
+          <div class="space-y-2">
+            <span class="p-float-label">
+              <InputText
+                id="name"
+                v-model.trim.lazy="form.name"
+                class="p-inputtext-sm w-full"
+                type="text"
+                @blur="$v.form.name.$touch()"
+              />
+
+              <label for="name">Name</label>
+            </span>
+
+            <p
+              v-if="$v.form.name.$error && !$v.form.name.required"
+              class="error"
+            >
+              You must provide a location name
+            </p>
+
+            <p
+              v-else-if="$v.form.name.$error && !$v.form.name.minLength"
+              class="error"
+            >
+              A location name must be at least 2 characters
+            </p>
+          </div>
 
           <Button
             :disabled="isSaving"
@@ -91,15 +131,31 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import { validationMixin } from 'vuelidate'
+import { minLength, required } from 'vuelidate/lib/validators'
 
 export default {
+  mixins: [validationMixin],
+
   data() {
     return {
       filters: {},
-      isSaving: false,
       isLoadingLocations: false,
-      name: '',
+      isSaving: false,
+      form: {
+        name: '',
+      },
+      state: 'default',
     }
+  },
+
+  validations: {
+    form: {
+      name: {
+        required,
+        minLength: minLength(2),
+      },
+    },
   },
 
   computed: {
@@ -121,19 +177,25 @@ export default {
 
     async saveLocation() {
       if (!this.isSaving) {
-        try {
-          this.isSaving = true
-          await this.addLocationAsync(this.name)
-          await this.loadLocationsAsync()
-          this.$toast.add({
-            severity: 'success',
-            summary: 'Location Saved',
-            detail: `The location ${this.name} has been saved.`,
-            life: 3000,
-          })
-          this.name = ''
-          this.isSaving = false
-        } catch (err) {}
+        this.$v.form.$touch()
+        if (!this.$v.form.$invalid) {
+          try {
+            this.isSaving = true
+            const { name } = this.form
+            await this.addLocationAsync(name)
+            await this.loadLocationsAsync()
+            this.$toast.add({
+              severity: 'success',
+              summary: 'Location Saved',
+              detail: `The location ${name} has been saved.`,
+              life: 3000,
+            })
+            this.resetForm()
+          } catch (err) {
+          } finally {
+            this.isSaving = false
+          }
+        }
       }
     },
 
@@ -152,6 +214,16 @@ export default {
           await this.loadLocationsAsync()
         },
       })
+    },
+
+    resetForm() {
+      this.form.name = ''
+      this.$v.form.$reset()
+    },
+
+    closeAddLocation() {
+      this.resetForm()
+      this.state = 'default'
     },
   },
 }

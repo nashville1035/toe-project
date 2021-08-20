@@ -79,6 +79,7 @@ export default {
       'ScrollPanel',
       'Skeleton',
       'Toast',
+      'Toolbar',
     ],
     directives: [],
     services: ['ConfirmationService', 'ToastService'],

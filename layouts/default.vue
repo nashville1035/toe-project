@@ -25,6 +25,34 @@ export default {
 
 <style lang="postcss">
 @import '@mdi/font/css/materialdesignicons';
+
+.error {
+  @apply text-xs text-red-500 leading-none mt-2;
+}
+
+.p {
+  &-button {
+    @apply bg-primary text-white;
+
+    &:enabled:hover,
+    &:enabled:active {
+      @apply bg-primary-light text-white;
+    }
+
+    &:enabled:focus {
+      @apply bg-primary-light;
+    }
+
+    &&-outlined {
+      @apply text-primary;
+
+      &:enabled:hover,
+      &:enabled:active {
+        @apply border border-primary-light text-primary-light;
+      }
+    }
+  }
+}
 </style>
 
 <style lang="postcss" scoped>
@@ -40,7 +68,7 @@ export default {
 }
 
 .con {
-  @apply w-4/5 mx-auto;
+  @apply w-4/5 mx-auto max-w-screen-desk;
 }
 
 ::v-deep {
