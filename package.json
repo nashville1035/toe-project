@@ -24,7 +24,8 @@
     "mitt": "^3.0.0",
     "nuxt": "^2.15.7",
     "primeicons": "^4.1.0",
-    "primevue": "^2.4.2"
+    "primevue": "^2.4.2",
+    "vuelidate": "^0.7.6"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.14.7",
