@@ -352,7 +352,7 @@ export default {
     },
 
     years() {
-      const startYear = 1900
+      const startYear = 1965
 
       return Array.from(
         { length: 1 + this.currentYear - startYear },
@@ -381,18 +381,6 @@ export default {
       if (val.id && val.id !== oldVal.id) {
         this.isLoadingTemperatures = true
         await this.loadTemperaturesAsync(val.id)
-        this.isLoadingTemperatures = false
-      }
-    },
-
-    async selectedYear(val, oldVal) {
-      if (val && this.state === 'default') {
-        this.state = 'selected'
-      }
-
-      if (val && val !== oldVal) {
-        this.isLoadingTemperatures = true
-        await this.loadTemperaturesAsync(this.selectedLocation.id)
         this.isLoadingTemperatures = false
       }
     },

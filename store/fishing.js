@@ -68,6 +68,8 @@ export const actions = {
       .collection('vessels')
       .doc(id)
       .collection('landings')
+      .orderBy('year', 'desc')
+      .orderBy('month', 'asc')
       .get()
 
     if (snap.empty) {

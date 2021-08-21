@@ -1,21 +1,54 @@
 <template>
   <div class="con flex flex-col space-y-16">
-    <Card>
+    <Toolbar>
+      <template #left>
+        <h1 class="text-3xl">Vessels</h1>
+      </template>
+
+      <template #right>
+        <Button
+          v-if="state === 'default'"
+          label="New"
+          icon="mdi mdi-plus"
+          @click="state = 'add-vessel'"
+        />
+
+        <Button
+          v-else
+          class="!bg-secondary-dark !text-white"
+          icon="mdi mdi-close"
+          @click="closeAddVessel"
+        />
+      </template>
+    </Toolbar>
+
+    <Card v-if="state === 'add-vessel'">
       <template #title>
         <h1 class="text-2xl">Add Vessel</h1>
       </template>
 
       <template #content>
         <form class="flex flex-col space-y-8 w-60" @submit.prevent="saveVessel">
-          <span class="p-float-label">
-            <InputText
-              id="name"
-              v-model.trim="name"
-              class="p-inputtext-sm w-full"
-              type="text"
-            />
-            <label for="name">Name</label>
-          </span>
+          <div class="space-y-2">
+            <span class="p-float-label">
+              <InputText
+                id="name"
+                v-model.trim.lazy="form.name"
+                class="p-inputtext-sm w-full"
+                type="text"
+                @blur="$v.form.name.$touch()"
+              />
+
+              <label for="name">Name</label>
+            </span>
+
+            <p
+              v-if="$v.form.name.$error && !$v.form.name.required"
+              class="error"
+            >
+              You must provide a vessel name
+            </p>
+          </div>
 
           <Button
             :disabled="isSaving"
@@ -88,15 +121,30 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import { validationMixin } from 'vuelidate'
+import { required } from 'vuelidate/lib/validators'
 
 export default {
+  mixins: [validationMixin],
+
   data() {
     return {
       filters: {},
       isSaving: false,
       isLoadingVessels: false,
-      name: '',
+      form: {
+        name: '',
+      },
+      state: 'default',
     }
+  },
+
+  validations: {
+    form: {
+      name: {
+        required,
+      },
+    },
   },
 
   computed: {
@@ -118,19 +166,28 @@ export default {
 
     async saveVessel() {
       if (!this.isSaving) {
-        try {
-          this.isSaving = true
-          await this.addVesselAsync(this.name)
-          await this.loadVesselsAsync()
-          this.$toast.add({
-            severity: 'success',
-            summary: 'Vessel Saved',
-            detail: `The vessel ${this.name} has been saved.`,
-            life: 3000,
-          })
-          this.name = ''
-          this.isSaving = false
-        } catch (err) {}
+        this.$v.form.$touch()
+        if (!this.$v.form.$invalid) {
+          const { name } = this.form
+          try {
+            this.isSaving = true
+
+            await this.addVesselAsync(name)
+            await this.loadVesselsAsync()
+
+            this.$toast.add({
+              severity: 'success',
+              summary: 'Vessel Saved',
+              detail: `The vessel ${name} has been saved.`,
+              life: 3000,
+            })
+
+            this.resetForm()
+          } catch (err) {
+          } finally {
+            this.isSaving = false
+          }
+        }
       }
     },
 
@@ -149,6 +206,16 @@ export default {
           await this.loadVesselsAsync()
         },
       })
+    },
+
+    resetForm() {
+      this.form.name = ''
+      this.$v.form.$reset()
+    },
+
+    closeAddVessel() {
+      this.resetForm()
+      this.state = 'default'
     },
   },
 }
