@@ -192,7 +192,7 @@
           :filters="filters"
           :paginator="true"
           :row-hover="true"
-          :rows="50"
+          :rows="60"
           :value="landingsWithMonthNames"
         >
           <template #header>
@@ -435,6 +435,7 @@ export default {
       this.state = 'default'
       this.resetAddLandingForm()
       this.upload.location = null
+      this.$v.upload.$reset()
     },
 
     showDeleteConfirmation(item) {
