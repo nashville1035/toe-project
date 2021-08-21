@@ -95,4 +95,20 @@ export const actions = {
 
     commit('addVessels', items)
   },
+
+  async loadLandingsForLocationAsync({ commit }, id) {
+    const snap = await this.$fire.firestore
+      .collectionGroup('landings')
+      .where('location.id', '==', id)
+      .get()
+
+    if (snap.empty) {
+      return
+    }
+
+    const items = []
+    snap.forEach((doc) => items.push({ id: doc.id, ...doc.data() }))
+
+    commit('addLandings', items)
+  },
 }

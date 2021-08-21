@@ -45,6 +45,11 @@ export default {
           label: 'Reports',
           items: [
             {
+              label: 'Models',
+              icon: 'mdi mdi-infinity',
+              to: { name: 'reports-model' },
+            },
+            {
               label: 'View',
               icon: 'mdi mdi-chart-box-outline',
               to: { name: 'reports-view' },
