@@ -238,16 +238,6 @@
             </template>
           </Column>
 
-          <Column field="avg" header="Average">
-            <template #body="slotProps">
-              <Skeleton v-if="isLoadingTemperatures"></Skeleton>
-
-              <template v-else>
-                {{ slotProps.data.avg }}
-              </template>
-            </template>
-          </Column>
-
           <Column field="min" header="Minimum">
             <template #body="slotProps">
               <Skeleton v-if="isLoadingTemperatures"></Skeleton>
@@ -264,6 +254,16 @@
 
               <template v-else>
                 {{ slotProps.data.max }}
+              </template>
+            </template>
+          </Column>
+
+          <Column field="avg" header="Average">
+            <template #body="slotProps">
+              <Skeleton v-if="isLoadingTemperatures"></Skeleton>
+
+              <template v-else>
+                {{ slotProps.data.avg }}
               </template>
             </template>
           </Column>
