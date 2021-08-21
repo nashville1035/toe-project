@@ -17,18 +17,26 @@
 
       <template #right>
         <template v-if="selectedLocation.id">
-          <Button
-            v-if="state === 'default'"
-            label="New"
-            icon="mdi mdi-plus"
-            @click="state = 'add-temperature'"
-          />
+          <div v-if="state === 'default'" class="flex items-center space-x-4">
+            <Button
+              label="New"
+              icon="mdi mdi-plus"
+              @click="state = 'add-temperature'"
+            />
+
+            <Button
+              class="!bg-secondary"
+              label="Import"
+              icon="mdi mdi-upload"
+              @click="state = 'upload-temperatures'"
+            />
+          </div>
 
           <Button
             v-else
             class="!bg-secondary-dark !text-white"
             icon="mdi mdi-close"
-            @click="closeAddTemperature"
+            @click="returnDefaultState"
           />
         </template>
       </template>
@@ -161,7 +169,30 @@
       </template>
     </Card>
 
-    <Card v-else>
+    <Card v-if="state === 'upload-temperatures'">
+      <template #title>
+        <h1 class="text-2xl">
+          Upload temperatures for <em>{{ selectedLocation.name }}</em>
+        </h1>
+      </template>
+
+      <template #content>
+        <FileUpload
+          :custom-upload="true"
+          :file-limit="1"
+          :max-file-size="128 * 1000"
+          :show-cancel-button="false"
+          accept=".xlsx"
+          @uploader="saveFile"
+        >
+          <template #empty>
+            <p>Drag and drop Excel file here to upload.</p>
+          </template>
+        </FileUpload>
+      </template>
+    </Card>
+
+    <Card v-if="state === 'default'">
       <template #content>
         <DataTable
           current-page-report-template="Showing {first} to {last} of {totalRecords} entries"
@@ -450,9 +481,27 @@ export default {
       })
     },
 
-    closeAddTemperature() {
+    returnDefaultState() {
       this.state = 'default'
       this.resetAddForm()
+    },
+
+    async saveFile(e) {
+      const [file] = e.files
+      const fileRef = this.$fire.storage.ref(
+        `uploads/temperature/${this.selectedLocation.id}/${file.name}`,
+      )
+
+      await fileRef.put(file)
+
+      this.$toast.add({
+        severity: 'success',
+        summary: 'Temperature Data Uploaded',
+        detail: `The file has been uploaded. Temperature data will soon be updated.`,
+        life: 3000,
+      })
+
+      this.returnDefaultState()
     },
   },
 }

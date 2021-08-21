@@ -73,6 +73,7 @@ export default {
       'ConfirmDialog',
       'DataTable',
       'Dropdown',
+      'FileUpload',
       'InputNumber',
       'InputText',
       'Menu',
