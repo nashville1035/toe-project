@@ -42,7 +42,8 @@ export const actions = {
       .collection('temp-location')
       .doc(location)
       .collection('temps')
-      .add({
+      .doc(`${year}${month.toString().padStart(2, '0')}`)
+      .set({
         avg,
         min,
         max,
@@ -97,6 +98,8 @@ export const actions = {
       .collection('temp-location')
       .doc(id)
       .collection('temps')
+      .orderBy('year', 'desc')
+      .orderBy('month', 'asc')
       .get()
 
     if (snap.empty) {

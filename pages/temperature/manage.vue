@@ -1,33 +1,10 @@
 <template>
   <div class="con flex flex-col space-y-16">
-    <!-- <div class="flex items-center space-x-4">
-      <h1 class="text-2xl">Manage Temperature</h1>
-
-      <Dropdown
-        v-model="selectedLocation"
-        class="w-60"
-        option-label="name"
-        placeholder="Location"
-        :options="locationsByName"
-      />
-
-      <Dropdown
-        v-model="selectedYear"
-        class="w-32"
-        option-label="name"
-        option-value="value"
-        placeholder="Year"
-        :disabled="!selectedLocation.id"
-        :options="years"
-      />
-    </div> -->
     <Toolbar>
       <template #left>
-        <h1 class="text-3xl">Manage Temperatures</h1>
-      </template>
-
-      <template #right>
         <div class="flex items-center space-x-4">
+          <h1 class="text-3xl">Manage Temperatures</h1>
+
           <Dropdown
             v-model="selectedLocation"
             class="w-60"
@@ -35,23 +12,25 @@
             placeholder="Location"
             :options="locationsByName"
           />
-
-          <template v-if="selectedLocation.id">
-            <Button
-              v-if="state === 'default'"
-              label="New"
-              icon="mdi mdi-plus"
-              @click="state = 'add-temperature'"
-            />
-
-            <Button
-              v-else
-              class="!bg-secondary-dark !text-white"
-              icon="mdi mdi-close"
-              @click="closeAddTemperature"
-            />
-          </template>
         </div>
+      </template>
+
+      <template #right>
+        <template v-if="selectedLocation.id">
+          <Button
+            v-if="state === 'default'"
+            label="New"
+            icon="mdi mdi-plus"
+            @click="state = 'add-temperature'"
+          />
+
+          <Button
+            v-else
+            class="!bg-secondary-dark !text-white"
+            icon="mdi mdi-close"
+            @click="closeAddTemperature"
+          />
+        </template>
       </template>
     </Toolbar>
 
@@ -182,157 +161,106 @@
       </template>
     </Card>
 
-    <!-- <template v-if="state === 'selected'">
-      <Card>
-        <template #title>
-          <h1 class="text-2xl">
-            Add Temperature for <em>{{ selectedLocation.name }}</em>
-          </h1>
-        </template>
+    <Card v-else>
+      <template #content>
+        <DataTable
+          current-page-report-template="Showing {first} to {last} of {totalRecords} entries"
+          data-key="id"
+          group-rows-by="year"
+          paginator-template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+          row-group-mode="subheader"
+          :filters="filters"
+          :paginator="true"
+          :row-hover="true"
+          :rows="60"
+          :value="temperaturesWithMonthNames"
+        >
+          <template #header>
+            <h1 class="text-2xl">
+              <span v-if="selectedLocation.id"
+                >Temperatures for {{ selectedLocation.name }}</span
+              >
+            </h1>
 
-        <template #content>
-          <form
-            class="flex flex-col space-y-8 w-80"
-            @submit.prevent="saveTemperature"
-          >
-            <Dropdown
-              v-model="selectedMonth"
-              option-label="name"
-              option-value="value"
-              placeholder="Select a month"
-              :options="months"
-            />
+            <span class="p-input-icon-left">
+              <i class="pi pi-search" />
 
-            <span class="p-float-label">
-              <InputNumber
-                id="min"
-                v-model="min"
-                class="w-full"
-                mode="decimal"
-                :min-fraction-digits="3"
-                :max-fraction-digits="3"
-              />
-              <label for="min">Minimum</label>
+              <InputText v-model="filters['global']" placeholder="Search" />
             </span>
+          </template>
 
-            <span class="p-float-label">
-              <InputNumber
-                id="max"
-                v-model="max"
-                class="w-full"
-                mode="decimal"
-                :min-fraction-digits="3"
-                :max-fraction-digits="5"
-              />
-              <label for="max">Maximum</label>
-            </span>
+          <template #empty>
+            <p>No temperatures found.</p>
+          </template>
 
-            <span class="p-float-label">
-              <InputNumber
-                id="avg"
-                v-model="avg"
-                class="w-full"
-                mode="decimal"
-                :min-fraction-digits="3"
-                :max-fraction-digits="3"
-              />
-              <label for="avg">Average</label>
-            </span>
+          <template #groupheader="slotProps">
+            <span>{{ slotProps.data.year }}</span>
+          </template>
 
-            <Button
-              :disabled="isSaving"
-              label="Add"
-              class="p-button-outlined p-button-sm"
-              type="submit"
-            />
-          </form>
-        </template>
-      </Card>
+          <Column field="month" header="Month">
+            <template #body="slotProps">
+              <Skeleton v-if="isLoadingTemperatures"></Skeleton>
 
-      <Card>
-        <template #content>
-          <DataTable
-            data-key="id"
-            :filters="filters"
-            :row-hover="true"
-            :rows="12"
-            :value="temperatures"
-          >
-            <template #header>
-              <h1 class="text-2xl">
-                {{ selectedLocation.name }} temperatures for {{ selectedYear }}
-              </h1>
+              <template v-else>
+                {{ slotProps.data.month }}
+              </template>
             </template>
+          </Column>
 
-            <template #empty>
-              <p>No temperatures found.</p>
+          <Column field="avg" header="Average">
+            <template #body="slotProps">
+              <Skeleton v-if="isLoadingTemperatures"></Skeleton>
+
+              <template v-else>
+                {{ slotProps.data.avg }}
+              </template>
             </template>
+          </Column>
 
-            <Column field="month" header="Month">
-              <template #body="slotProps">
-                <Skeleton v-if="isLoadingTemperatures"></Skeleton>
+          <Column field="min" header="Minimum">
+            <template #body="slotProps">
+              <Skeleton v-if="isLoadingTemperatures"></Skeleton>
 
-                <template v-else>
-                  {{ getMonthText(slotProps.data.month) }}
-                </template>
+              <template v-else>
+                {{ slotProps.data.min }}
               </template>
-            </Column>
+            </template>
+          </Column>
 
-            <Column field="avg" header="Average">
-              <template #body="slotProps">
-                <Skeleton v-if="isLoadingTemperatures"></Skeleton>
+          <Column field="max" header="Maximum">
+            <template #body="slotProps">
+              <Skeleton v-if="isLoadingTemperatures"></Skeleton>
 
-                <template v-else>
-                  {{ slotProps.data.avg }}
-                </template>
+              <template v-else>
+                {{ slotProps.data.max }}
               </template>
-            </Column>
+            </template>
+          </Column>
 
-            <Column field="min" header="Minimum">
-              <template #body="slotProps">
-                <Skeleton v-if="isLoadingTemperatures"></Skeleton>
+          <Column header-class="actions__header" body-class="actions__body">
+            <template #body="slotProps">
+              <Skeleton v-if="isLoadingTemperatures"></Skeleton>
 
-                <template v-else>
-                  {{ slotProps.data.min }}
-                </template>
+              <template v-else>
+                <div class="flex space-x-3 items-center">
+                  <Button
+                    class="p-button-danger p-button-rounded p-button-text"
+                    icon="mdi mdi-delete-outline"
+                    type="button"
+                    @click="showDeleteConfirmation(slotProps.data)"
+                  />
+                </div>
               </template>
-            </Column>
-
-            <Column field="max" header="Maximum">
-              <template #body="slotProps">
-                <Skeleton v-if="isLoadingTemperatures"></Skeleton>
-
-                <template v-else>
-                  {{ slotProps.data.max }}
-                </template>
-              </template>
-            </Column>
-
-            <Column header-class="actions__header" body-class="actions__body">
-              <template #body="slotProps">
-                <Skeleton v-if="isLoadingTemperatures"></Skeleton>
-
-                <template v-else>
-                  <div class="flex space-x-3 items-center">
-                    <Button
-                      class="p-button-danger p-button-rounded p-button-text"
-                      icon="mdi mdi-delete-outline"
-                      type="button"
-                      @click="showDeleteConfirmation(slotProps.data)"
-                    ></Button>
-                  </div>
-                </template>
-              </template>
-            </Column>
-          </DataTable>
-        </template>
-      </Card>
-    </template> -->
+            </template>
+          </Column>
+        </DataTable>
+      </template>
+    </Card>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 import { validationMixin } from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
 
@@ -373,14 +301,23 @@ export default {
   computed: {
     ...mapGetters('temperature', ['locationsByName']),
 
+    ...mapState('temperature', ['temperatures']),
+
     currentYear() {
       const now = this.$fireModule.firestore.Timestamp.now()
       const currentYear = this.$dateFns.getYear(now.toDate())
       return currentYear
     },
 
-    temperatures() {
-      return this.sortedTemperatures()(this.selectedYear)
+    temperaturesWithMonthNames() {
+      return this.temperatures.map(({ avg, id, min, max, month, year }) => ({
+        avg,
+        id,
+        min,
+        max,
+        year,
+        month: this.getMonthText(month),
+      }))
     },
 
     years() {
@@ -410,9 +347,9 @@ export default {
 
   watch: {
     async selectedLocation(val, oldVal) {
-      if (val.id && val.id !== oldVal.id && this.selectedYear) {
+      if (val.id && val.id !== oldVal.id) {
         this.isLoadingTemperatures = true
-        await this.loadTemperaturesAsync(this.selectedLocation.id)
+        await this.loadTemperaturesAsync(val.id)
         this.isLoadingTemperatures = false
       }
     },
@@ -495,9 +432,7 @@ export default {
 
     showDeleteConfirmation(item) {
       this.$confirm.require({
-        message: `Are you sure you want to delete the '${this.getMonthText(
-          item.month,
-        )} ${item.year}' temperature?`,
+        message: `Are you sure you want to delete the '${item.month} ${item.year}' temperature?`,
         header: 'Confirm Deletion',
         accept: async () => {
           await this.deleteTemperatureAsync({
@@ -507,9 +442,7 @@ export default {
           this.$toast.add({
             severity: 'success',
             summary: 'Temperature Deleted',
-            detail: `A temperature has been deleted for ${this.getMonthText(
-              item.month,
-            )} ${item.year}.`,
+            detail: `A temperature has been deleted for ${item.month} ${item.year}.`,
             life: 3000,
           })
           await this.loadTemperaturesAsync(this.selectedLocation.id)
