@@ -243,7 +243,7 @@
               <Skeleton v-if="isLoadingTemperatures"></Skeleton>
 
               <template v-else>
-                {{ slotProps.data.min }}
+                {{ slotProps.data.min.toString().padEnd(6, '0') }}
               </template>
             </template>
           </Column>
@@ -253,7 +253,7 @@
               <Skeleton v-if="isLoadingTemperatures"></Skeleton>
 
               <template v-else>
-                {{ slotProps.data.max }}
+                {{ slotProps.data.max.toString().padEnd(6, '0') }}
               </template>
             </template>
           </Column>
@@ -263,7 +263,7 @@
               <Skeleton v-if="isLoadingTemperatures"></Skeleton>
 
               <template v-else>
-                {{ slotProps.data.avg }}
+                {{ slotProps.data.avg.toString().padEnd(6, '0') }}
               </template>
             </template>
           </Column>
