@@ -71,7 +71,7 @@
               class="w-full"
               option-label="name"
               option-value="value"
-              placeholder="Epochs"
+              placeholder="Epochs (Times Run)"
               :options="epochs"
             />
 
@@ -159,8 +159,8 @@ export default {
     return {
       isGenerating: false,
       model: {
-        batchSize: 16,
-        epochs: 50,
+        batchSize: '',
+        epochs: '',
       },
       modelUploaded: false,
       modelMetaUploaded: false,
@@ -286,10 +286,10 @@ export default {
 
           this.nn = ml5.neuralNetwork(options)
 
-          this.fixedTemps.forEach(({ avg, min, max, year }, i) => {
+          this.fixedTemps.forEach(({ avg, min, max }, i) => {
             const x = i + 1
 
-            if (x >= this.landings.length) {
+            if (x >= this.fixedLandings.length) {
               return
             }
 
@@ -299,14 +299,23 @@ export default {
               max,
             }
 
-            const { mass } = this.landings[x]
+            const { mass } = this.fixedLandings[x]
 
             if (!mass) {
               return
             }
 
+            const rand = Math.random()
+            // let tweak = 0
+            // if (rand < 0.7) {
+            //   tweak = rand
+            // } else {
+            //   tweak = rand + 1
+            // }
+
+            // console.log(tweak, mass * tweak)
             const output = {
-              mass,
+              mass: mass * rand,
             }
 
             this.nn.addData(inputs, output)
